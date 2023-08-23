@@ -96,14 +96,24 @@ public class BaseAttachmentEntityController extends BaseController {
 		return renderResult(Global.TRUE, text("删除base_attachment成功！"));
 	}
 
-	@RequestMapping({"upload"})
+/*	@RequestMapping({"upload"})
 	@ResponseBody
 	public AttachmentVO upload(@RequestParam("file") MultipartFile file) {
-/*		FileUploadController var10000 = this;
+*//*		FileUploadController var10000 = this;
 		FileUploadController var2 = var1;
-		FileUploadParams params = var10000;*/
+		FileUploadParams params = var10000;*//*
 		AttachmentVO attachmentVO = baseAttachmentEntityService.uploadAttachment(file, 1, 123l);
 		return attachmentVO;
+	}*/
+
+	/**
+	 * 下载文件
+	 * @param attachmentId
+	 * @param response
+	 */
+	@GetMapping("/{attachmentId}")
+	public void downloadAttachment(@PathVariable Long attachmentId, HttpServletResponse response){
+		baseAttachmentEntityService.downloadImageById(attachmentId, response);
 	}
 	
 }

@@ -603,6 +603,7 @@ shiro:
   # 提示：填写过滤规则，请注意先后顺序，从上到下，先匹配先受用规则，匹配成功后不再继续匹配。
   filterChainDefinitions: |
     ${adminPath}/sys/user/test = anon
+    ${adminPath}/attachment/** = anon
     ${adminPath}/** = user
 
 

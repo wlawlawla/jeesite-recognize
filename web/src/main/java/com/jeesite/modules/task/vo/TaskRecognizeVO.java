@@ -1,6 +1,7 @@
 package com.jeesite.modules.task.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jeesite.modules.base.constant.BaseConstants;
 import lombok.Data;
 
 @Data
@@ -40,7 +41,7 @@ public class TaskRecognizeVO {
 
     public void setImageUrl(Long id){
         if (id != null){
-            this.imageUrl = "attachment/" + id;
+            this.imageUrl = BaseConstants.IMAGE_URL_PREFIX + id;
         }
     }
 

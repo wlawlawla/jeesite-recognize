@@ -38,7 +38,10 @@ public class DeviceEntity extends DataEntity<DeviceEntity> {
 	private Long stationId;		// 站所id
 	private Long orderNum;		// 排序
 	private String stationName;
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Long attachmentId;
+
+	private String imageUrl;
 
 	public DeviceEntity() {
 		this(null);
@@ -118,5 +121,13 @@ public class DeviceEntity extends DataEntity<DeviceEntity> {
 
 	public void setAttachmentId(Long attachmentId) {
 		this.attachmentId = attachmentId;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

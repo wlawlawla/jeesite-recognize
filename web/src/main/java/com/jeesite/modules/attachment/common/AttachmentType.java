@@ -25,6 +25,8 @@ public enum AttachmentType {
      * 压板屏幕图片
      */
     SCREEN_IMAGE(3),
+
+    STATION_IMAGE(4),
     ;
 
     private int type;

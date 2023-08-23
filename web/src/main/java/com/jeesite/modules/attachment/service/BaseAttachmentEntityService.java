@@ -2,6 +2,7 @@ package com.jeesite.modules.attachment.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -20,6 +21,8 @@ import com.jeesite.modules.attachment.entity.BaseAttachmentEntity;
 import com.jeesite.modules.attachment.dao.BaseAttachmentEntityDao;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * base_attachmentService
  *
@@ -28,6 +31,35 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 public class BaseAttachmentEntityService extends CrudService<BaseAttachmentEntityDao, BaseAttachmentEntity> {
+
+    public void downloadImageById(Long attachmentId, HttpServletResponse response){
+        if (attachmentId == null){
+            return;
+        }
+        downloadImage(dao.findById(attachmentId), response);
+    }
+
+    /**
+     * 下载图片
+     * @param baseAttachmentEntity
+     * @param response
+     */
+    private void downloadImage(BaseAttachmentEntity baseAttachmentEntity, HttpServletResponse response){
+        if (baseAttachmentEntity == null){
+            return;
+        }
+        try {
+            response.setContentType("image/png");
+            response.setHeader("Content-disposition", "attachment; filename=" + baseAttachmentEntity.getAttachmentName());
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Expires", "0");
+            OutputStream out = response.getOutputStream();
+            out.write(baseAttachmentEntity.getContent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public AttachmentVO uploadAttachment(File file, Integer type, Long fId){
         if (file == null){

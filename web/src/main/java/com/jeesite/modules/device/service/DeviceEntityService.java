@@ -17,7 +17,6 @@ import com.jeesite.modules.base.constant.BaseConstants;
 import com.jeesite.modules.device.util.DeviceImageUtil;
 import com.jeesite.modules.device.util.DeviceImportUtil;
 import com.jeesite.modules.device.vo.DeviceInfoVO;
-import com.jeesite.modules.screen.service.StrapScreenEntityService;
 import com.jeesite.modules.screen.vo.StrapScreenVO;
 import com.jeesite.modules.station.dao.StationEntityDao;
 import com.jeesite.modules.station.entity.StationEntity;
@@ -100,16 +99,7 @@ public class DeviceEntityService extends CrudService<DeviceEntityDao, DeviceEnti
 		//保存设备信息，拿到设备id
 		save(deviceInfoEntity);
 
-		File image = new File(deviceInfoEntity.getDeviceName() + ".jpg");
-		DeviceImageUtil.generateImage(deviceInfoEntity.getDeviceId().toString(), image);
-		AttachmentVO attachmentVO = attachmentEntityService.uploadAttachment(image, AttachmentType.DEVICE_IMAGE.getType(), deviceInfoEntity.getDeviceId());
-
-		if (attachmentVO != null && attachmentVO.getTid() != null) {
-			deviceInfoEntity.setAttachmentId(attachmentVO.getTid());
-			deviceInfoVO.setAttachmentId(attachmentVO.getTid());
-			deviceInfoEntity.setIsNewRecord(false);
-			save(deviceInfoEntity);
-		}
+		deviceInfoVO.setAttachmentId(deviceInfoEntity.getAttachmentId());
 
 		List<StrapScreenVO> strapScreenVOList = new ArrayList<>();
 
@@ -176,7 +166,7 @@ public class DeviceEntityService extends CrudService<DeviceEntityDao, DeviceEnti
 	@Override
 	public DeviceEntity get(DeviceEntity deviceEntity) {
 		DeviceEntity entity = super.get(deviceEntity);
-		setStationName(Arrays.asList(entity));
+		setDeviceInfo(Arrays.asList(entity));
 		return entity;
 	}
 	
@@ -189,7 +179,7 @@ public class DeviceEntityService extends CrudService<DeviceEntityDao, DeviceEnti
 	@Override
 	public Page<DeviceEntity> findPage(DeviceEntity deviceEntity) {
 		Page<DeviceEntity> page = super.findPage(deviceEntity);
-		setStationName(page.getList());
+		setDeviceInfo(page.getList());
 		return page;
 	}
 	
@@ -201,7 +191,7 @@ public class DeviceEntityService extends CrudService<DeviceEntityDao, DeviceEnti
 	@Override
 	public List<DeviceEntity> findList(DeviceEntity deviceEntity) {
 		List<DeviceEntity> list = super.findList(deviceEntity);
-		setStationName(list);
+		setDeviceInfo(list);
 		return list;
 	}
 	
@@ -212,8 +202,21 @@ public class DeviceEntityService extends CrudService<DeviceEntityDao, DeviceEnti
 	@Override
 	@Transactional
 	public void save(DeviceEntity deviceEntity) {
+
 		super.save(deviceEntity);
-		recognizeDictUtils.updateStationMap();
+		if (deviceEntity.getAttachmentId() == null){
+			//生成设备二维码
+			File image = new File(deviceEntity.getDeviceName() + ".jpg");
+			DeviceImageUtil.generateImage(deviceEntity.getDeviceId().toString(), image);
+			AttachmentVO attachmentVO = attachmentEntityService.uploadAttachment(image, AttachmentType.DEVICE_IMAGE.getType(), deviceEntity.getDeviceId());
+
+			if (attachmentVO != null && attachmentVO.getTid() != null) {
+				deviceEntity.setAttachmentId(attachmentVO.getTid());
+				deviceEntity.setIsNewRecord(false);
+				super.save(deviceEntity);
+			}
+		}
+
 	}
 	
 	/**
@@ -237,11 +240,17 @@ public class DeviceEntityService extends CrudService<DeviceEntityDao, DeviceEnti
 		recognizeDictUtils.updateStationMap();
 	}
 
-	private void setStationName(List<DeviceEntity> deviceEntities){
+	private void setDeviceInfo(List<DeviceEntity> deviceEntities){
 		Map<Long, String> stationNameMap = recognizeDictUtils.getStationNameMap();
 		if (CollectionUtils.isNotEmpty(deviceEntities)){
-			deviceEntities.forEach(deviceEntity -> deviceEntity.setStationName(stationNameMap.get(deviceEntity.getStationId())));
+			deviceEntities.forEach(deviceEntity -> {
+				deviceEntity.setStationName(stationNameMap.get(deviceEntity.getStationId()));
+				if (deviceEntity.getAttachmentId() != null){
+					deviceEntity.setImageUrl(BaseConstants.IMAGE_URL_PREFIX + deviceEntity.getAttachmentId());
+				}
+			});
 		}
 	}
+
 	
 }

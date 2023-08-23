@@ -1,5 +1,6 @@
 package com.jeesite.modules.station.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import javax.validation.constraints.NotBlank;
@@ -18,13 +19,19 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 @Table(name="station_info", alias="a", label="station_info信息", columns={
 		@Column(name="station_id", attrName="stationId", label="主键", isPK=true),
 		@Column(name="station_name", attrName="stationName", label="站所名称", queryType=QueryType.LIKE),
+		@Column(name="attachment_id", attrName="attachmentId", label="站所图片地址"),
 	}, orderBy="a.station_id DESC"
 )
 public class StationEntity extends DataEntity<StationEntity> {
 	
 	private static final long serialVersionUID = 1L;
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Long stationId;		// 主键
 	private String stationName;		// 站所名称
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	private Long attachmentId;
+
+	private String imageUrl;
 
 	public StationEntity() {
 		this(null);
@@ -52,5 +59,20 @@ public class StationEntity extends DataEntity<StationEntity> {
 	public void setStationName(String stationName) {
 		this.stationName = stationName;
 	}
-	
+
+	public Long getAttachmentId() {
+		return attachmentId;
+	}
+
+	public void setAttachmentId(Long attachmentId) {
+		this.attachmentId = attachmentId;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }
