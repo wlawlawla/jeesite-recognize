@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.station.dao.StationEntityDao">
+
+    <!-- 查询数据
+    <select id="findList" resultType="StationEntity">
+        SELECT ${sqlMap.column.toSql()}
+        FROM ${sqlMap.table.toSql()}
+        <where>
+            ${sqlMap.where.toSql()}
+        </where>
+        ORDER BY ${sqlMap.order.toSql()}
+    </select> -->
+
+    <select id="findAll" resultType="com.jeesite.modules.station.entity.StationEntity">
+        select s.*
+        FROM station_info s
+    </select>
+
+    <select id="findByStationId" resultType="com.jeesite.modules.station.entity.StationEntity">
+        select s.*
+        FROM station_info s
+        where s.station_id = #{id}
+    </select>
+
+    <select id="findByStationIdIn" resultType="com.jeesite.modules.station.entity.StationEntity">
+        select s.* FROM station_info s where s.station_id in
+        <foreach collection="stationIdList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByStationName" resultType="com.jeesite.modules.station.entity.StationEntity">
+        select s.* FROM station_info s where s.station_name = #{name} limit 1
+    </select>
+</mapper>

@@ -1,0 +1,88 @@
+<% layout('/layouts/default.html', {title: 'base_attachment管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('base_attachment管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('attachment:baseAttachmentEntity:edit')){ %>
+					<a href="${ctx}/attachment/baseAttachmentEntity/form" class="btn btn-default btnTool" title="${text('新增base_attachment')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${baseAttachmentEntity}" action="${ctx}/attachment/baseAttachmentEntity/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('外键')}：</label>
+					<div class="control-inline">
+						<#form:input path="fkSid" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="attachmentType" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="attachmentName" maxlength="300" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('附件')}：</label>
+					<div class="control-inline">
+						<#form:input path="content" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('附件大小')}：</label>
+					<div class="control-inline">
+						<#form:input path="sizeinMb" maxlength="18" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm isQuick">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("外键")}', name:'fkSid', index:'a.fk_sid', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/attachment/baseAttachmentEntity/form?tid='+row.tid+'" class="btnList" data-title="${text("编辑base_attachment")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("类型")}', name:'attachmentType', index:'a.attachment_type', width:150, align:"center"},
+		{header:'${text("名称")}', name:'attachmentName', index:'a.attachment_name', width:150, align:"left"},
+		{header:'${text("附件")}', name:'content', index:'a.content', width:150, align:"left"},
+		{header:'${text("附件大小")}', name:'sizeinMb', index:'a.sizein_mb', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			//<% if(hasPermi('attachment:baseAttachmentEntity:edit')){ %>
+				actions.push('<a href="${ctx}/attachment/baseAttachmentEntity/form?tid='+row.tid+'" class="btnList" title="${text("编辑base_attachment")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/attachment/baseAttachmentEntity/delete?tid='+row.tid+'" class="btnList" title="${text("删除base_attachment")}" data-confirm="${text("确认要删除该base_attachment吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			//<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

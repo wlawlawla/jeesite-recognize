@@ -105,10 +105,10 @@
 			</plugin>
 
 			<!-- timestamp插件 -->
-			<plugin>
+<!--			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-			</plugin>
+			</plugin>-->
 
 		</plugins>
 
@@ -131,7 +131,7 @@
 					</configuration>
 				</plugin>
 
-				<!-- timestamp插件，生成编译时间 -->
+				<!--&lt;!&ndash; timestamp插件，生成编译时间 &ndash;&gt;
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
@@ -148,7 +148,7 @@
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin>-->
 
 				<!-- jar插件，配置manifest文件，加入lib包的jar依赖 -->
 				<plugin>
@@ -187,8 +187,8 @@
 						</execution>
 					</executions>
 				</plugin>
-
-				<!-- war插件，war包名称不带版本号 -->
+<!--
+				&lt;!&ndash; war插件，war包名称不带版本号 &ndash;&gt;
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
@@ -202,18 +202,18 @@
 						<failOnMissingWebXml>false</failOnMissingWebXml>
 						<archive>
 							<manifest>
-								<!--suppress UnresolvedMavenProperty -->
+								&lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;
 								<mainClass>${start-class}</mainClass>
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							</manifest>
 							<addMavenDescriptor>false</addMavenDescriptor>
 							<manifestEntries>
-								<!--suppress UnresolvedMavenProperty -->
+								&lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;
 								<Build-Time>${build.time}</Build-Time>
 							</manifestEntries>
 						</archive>
 					</configuration>
-				</plugin>
+				</plugin>-->
 
 				<!-- resource插件 -->
 				<plugin>
@@ -228,13 +228,13 @@
 						<useDefaultDelimiters>false</useDefaultDelimiters>
 					</configuration>
 				</plugin>
-
-				<!-- exec插件 -->
+<!--
+				&lt;!&ndash; exec插件 &ndash;&gt;
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
 					<version>3.1.0</version>
-				</plugin>
+				</plugin>-->
 
 				<!-- springboot插件 -->
 				<plugin>
@@ -253,8 +253,8 @@
 						<mainClass>${start-class}</mainClass>
 					</configuration>
 				</plugin>
-
-				<!-- Eclipse 插件 -->
+<!--
+				&lt;!&ndash; Eclipse 插件 &ndash;&gt;
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-eclipse-plugin</artifactId>
@@ -278,7 +278,7 @@
 					</configuration>
 				</plugin>
 
-				<!-- Java Document Generate -->
+				&lt;!&ndash; Java Document Generate &ndash;&gt;
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
@@ -289,14 +289,14 @@
 							<goals>
 								<goal>jar</goal>
 							</goals>
-							<!-- <configuration>
+							&lt;!&ndash; <configuration>
 								<additionalparam>-Xdoclint:none</additionalparam>
-							</configuration> -->
+							</configuration> &ndash;&gt;
 						</execution>
 					</executions>
 				</plugin>
 
-				<!-- JavaScript CSS Compress -->
+				&lt;!&ndash; JavaScript CSS Compress &ndash;&gt;
 				<plugin>
 					<groupId>com.jeesite.maven</groupId>
 					<artifactId>compressor-maven-plugin</artifactId>
@@ -327,7 +327,7 @@
 					</configuration>
 				</plugin>
 
-				<!-- Eclipse m2e settings only -->
+				&lt;!&ndash; Eclipse m2e settings only &ndash;&gt;
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -339,7 +339,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.apache.maven.plugins</groupId>
 										<artifactId>maven-dependency-plugin</artifactId>
-										<!--suppress UnresolvedMavenProperty -->
+										&lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;
 										<versionRange>${maven-dependency-plugin.version}</versionRange>
 										<goals>
 											<goal>copy-dependencies</goal>
@@ -354,7 +354,7 @@
 					</configuration>
 				</plugin>
 
-				<!-- Docker 插件 https://github.com/fabric8io/docker-maven-plugin -->
+				&lt;!&ndash; Docker 插件 https://github.com/fabric8io/docker-maven-plugin &ndash;&gt;
 				<plugin>
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
@@ -383,7 +383,7 @@
 							</image>
 						</images>
 					</configuration>
-				</plugin>
+				</plugin>-->
 
 			</plugins>
 

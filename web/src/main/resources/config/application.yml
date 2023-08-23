@@ -54,7 +54,7 @@ jdbc:
   # Mysql 数据库配置
   type: mysql
   driver: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://127.0.0.1:3306/jeesite_v5?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+  url: jdbc:mysql://192.168.5.17:3306/tmall_ssm
   username: root
   password: 123456
   testSql: SELECT 1
@@ -547,8 +547,8 @@ shiro:
     # 加密用户名、密码、验证码，后再提交（key设置为3个，用逗号分隔）加密方式：DES（4.1.9及之前版本默认设置）
     # v4.2.0+ 开始支持 Base64 加密方式，方便移动端及第三方系统处理认证，可直接设置 Key 为 Base64（4.2.0+默认设置）
     #secretKey: thinkgem,jeesite,com
-    secretKey: Base64
-    #secretKey: ~
+    #secretKey: Base64
+    secretKey: ~
 
   # 记住我密钥设置，你可以通过 com.jeesite.test.RememberMeKeyGen 类快速生成一个秘钥。
   # 若不设置，则每次启动系统后自动生成一个新秘钥，这样会导致每次重启后，客户端记录的用户信息将失效。
@@ -602,7 +602,9 @@ shiro:
   # URI 权限过滤器定义（自定义添加参数时，请不要移除 ${adminPath}/** = user，否则会导致权限异常）
   # 提示：填写过滤规则，请注意先后顺序，从上到下，先匹配先受用规则，匹配成功后不再继续匹配。
   filterChainDefinitions: |
+    ${adminPath}/sys/user/test = anon
     ${adminPath}/** = user
+
 
 #  # URI 权限过滤器定义（以下参考，必须登录user可访问的地址和不需要登录anon可访问地址）
 #  filterChainDefinitions: |
@@ -929,3 +931,14 @@ msg:
 #======================================#
 #========== Project settings ==========#
 #======================================#
+
+model:
+  config:
+    nmsThreshold: 0.5
+    gpuDeviceId: -1
+    soft:
+      modelPath: soft
+      label: soft_open, soft_close, soft_on, soft_off, soft_open_v2, soft_close_v2
+    hard:
+      modelPath: hard
+      label: hard_open, hard_close, hard_none, hard_close_v2, hard_close_v3, hard_open_v2, hard_open_v3, hard_open_or_close

@@ -115,5 +115,15 @@
 				#{code}
 			</foreach>
 	</select>
+
+	<select id="findUserListByIdIn" resultType="EmpUser">
+		SELECT
+		<include refid="userColumns"/>
+		FROM ${_prefix}sys_user a
+		where a.user_code in
+		<foreach item="code" index="index" collection="idList" open="(" separator="," close=")">
+			#{code}
+		</foreach>
+	</select>
 	
 </mapper>

@@ -9,6 +9,7 @@ import java.util.List;
 import com.jeesite.common.dao.CrudDao;
 import com.jeesite.common.mybatis.annotation.MyBatisDao;
 import com.jeesite.modules.sys.entity.EmpUser;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 /**
@@ -39,5 +40,6 @@ public interface EmpUserDao extends CrudDao<EmpUser> {
 	 * 根据岗位编码查询用户，仅返回基本信息
 	 */
 	List<EmpUser> findUserListByPostCodes(EmpUser empUser);
-	
+
+	List<EmpUser> findUserListByIdIn(@Param("idList") List<String> idList);
 }

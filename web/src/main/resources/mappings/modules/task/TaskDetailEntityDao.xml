@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.task.dao.TaskDetailEntityDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TaskDetailEntity">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+
+	<select id="findByTaskId" resultType="com.jeesite.modules.task.entity.TaskDetailEntity">
+		select  t.* from task_detail t where t.task_id = #{taskId}
+	</select>
+
+<!--	<select id="searchTask" resultMap="BaseResultMap">
+		select t.* from task_detail t where 1 = 1
+		<if test="param != null">
+			<if test="param.taskId != null">
+				and t.task_id = #{param.taskId}
+			</if>
+			<if test="param.stationId != null">
+				and t.station_id = #{param.stationId}
+			</if>
+			<if test="param.taskName != null">
+				and instr(t.task_name , #{param.taskName}) > 0
+			</if>
+			<if test="param.taskNumber != null">
+				and instr(t.task_num , #{param.taskNumber}) > 0
+			</if>
+		</if>
+
+
+	</select>-->
+
+	<select id="getCurrentTask" resultType="com.jeesite.modules.task.entity.TaskDetailEntity">
+		select distinct t.* from task_detail t
+		left join task_relation r on t.task_id = r.task_id
+		where t.task_status = 'doing'
+		<if test="userId != null">
+			and r.relation_id = #{userId}
+		</if>
+
+		<if test="relationType != null">
+			and r.relation_type = #{relationType}
+		</if>
+		<choose>
+			<when test="relationType != null">
+				and r.relation_type = #{relationType}
+			</when>
+			<otherwise>
+				and r.relation_type in (2 ,3)
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

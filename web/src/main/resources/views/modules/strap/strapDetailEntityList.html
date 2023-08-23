@@ -1,0 +1,85 @@
+<% layout('/layouts/default.html', {title: '压板管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('压板管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('strap:strapDetailEntity:edit')){ %>
+					<a href="${ctx}/strap/strapDetailEntity/form" class="btn btn-default btnTool" title="${text('新增压板')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${strapDetailEntity}" action="${ctx}/strap/strapDetailEntity/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			<div class="form-group">
+				<label class="control-label col-sm-4" title="">
+					<span class="required ">*</span> ${text('屏幕名称')}：<i class="fa icon-question hide"></i></label>
+				<div class="col-sm-8">
+					<#form:treeselect id="screen" title="${text('屏幕选择')}"
+					path="screenId" labelPath="screenName"
+					url="${ctx}/station/device/screen/list"
+					class="required" allowClear="false" canSelectRoot="false" canSelectParent="false"/>
+				</div>
+			</div>
+				<div class="form-group">
+					<label class="control-label">${text('压板名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="strapName" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('压板值')}：</label>
+					<div class="control-inline">
+						<#form:input path="strapValue" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('压板位置')}：</label>
+					<div class="control-inline">
+						<#form:input path="strapPosition" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm isQuick">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("屏幕名称")}', name:'screenName', index:'a.screen_id', width:150, align:"left"},
+		{header:'${text("压板名称")}', name:'strapName', index:'a.strap_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+                return '<a href="${ctx}/strap/strapDetailEntity/form?strapId='+row.strapId+'" class="btnList" data-title="${text("编辑压板")}">'+(val||row.id)+'</a>';
+            }},
+		{header:'${text("压板值")}', name:'strapValue', index:'a.strap_value', width:150, align:"left", formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('strap_value')}, val, '', true);
+			}},
+		{header:'${text("压板位置")}', name:'strapPosition', index:'a.strap_position', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			//<% if(hasPermi('strap:strapDetailEntity:edit')){ %>
+				actions.push('<a href="${ctx}/strap/strapDetailEntity/form?strapId='+row.strapId+'" class="btnList" title="${text("编辑压板")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/strap/strapDetailEntity/delete?strapId='+row.strapId+'" class="btnList" title="${text("删除压板")}" data-confirm="${text("确认要删除该压板吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			//<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+
+	}
+});
+</script>

@@ -142,6 +142,15 @@ public class UserController extends BaseController {
 			return renderResult(Global.FALSE, se.getMessage());
 		}
 	}
+
+	@RequestMapping("/test")
+	public void updatePwd(){
+		try{
+			userService.updatePassword("system", "123456");
+		}catch(ServiceException se){
+
+		}
+	}
 	
 	/**
 	 * 用户信息 - 保存保密问题

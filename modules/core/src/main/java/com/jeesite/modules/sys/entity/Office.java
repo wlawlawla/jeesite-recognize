@@ -119,7 +119,7 @@ public class Office extends TreeEntity<Office> {
 		this.officeName = officeName;
 	}
 	
-	@NotBlank(message="机构全称不能为空")
+	//@NotBlank(message="机构全称不能为空")
 	@Size(min=0, max=200, message="机构全称长度不能超过 200 个字符")
 	public String getFullName() {
 		return fullName;
@@ -129,7 +129,7 @@ public class Office extends TreeEntity<Office> {
 		this.fullName = fullName;
 	}
 	
-	@NotBlank(message="机构类型不能为空")
+	//@NotBlank(message="机构类型不能为空")
 	@Size(min=0, max=1, message="机构类型长度不能超过 1 个字符")
 	public String getOfficeType() {
 		return officeType;

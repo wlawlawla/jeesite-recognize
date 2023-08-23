@@ -1,0 +1,131 @@
+<% layout('/layouts/default.html', {title: '任务管理', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa icon-note"></i> ${text(taskDetailEntity.isNewRecord ? '新增任务' : '编辑任务')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${taskDetailEntity}" action="${ctx}/task/taskDetailEntity/save" method="post" class="form-horizontal">
+			<div class="box-body">vo
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="taskId"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('站所')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="station" title="${text('站所选择')}"
+								path="stationId" labelPath="stationName"
+								url="${ctx}/station/list"
+								class="required" allowClear="false" canSelectRoot="true" canSelectParent="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('任务类型')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="taskType" dictType="task_type" blankOption="false" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('任务名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="taskName" maxlength="500" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('巡检周期')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="taskCycle" dictType="task_cycle" blankOption="true" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('巡检设备')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="device" title="${text('设备选择')}"
+								path="deviceIds"
+								url="${ctx}/station/device/list"
+								class="required" allowClear="false" canSelectRoot="false" canSelectParent="false" checkbox="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('备注')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="remark" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 任务负责人：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="testUser" title="用户选择"
+								path="directorIds"
+								url="${ctx}/sys/office/treeData?isLoadUser=true"
+								class="" allowClear="true" checkbox="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 工作组成员：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="testUser2" title="用户选择"
+								path="workerIds"
+								url="${ctx}/sys/office/treeData?isLoadUser=true"
+								class="" allowClear="true" checkbox="true"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('task:taskDetailEntity:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

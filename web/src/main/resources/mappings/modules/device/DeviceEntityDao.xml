@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.device.dao.DeviceEntityDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="DeviceEntity">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+	<select id="findAll" resultType="com.jeesite.modules.device.entity.DeviceEntity">
+		SELECT *
+		FROM device_info
+	</select>
+
+	<select id="findByDeviceIdIn" resultType="com.jeesite.modules.device.entity.DeviceEntity">
+		SELECT *
+		FROM device_info where device_id in
+		<foreach item="code" index="index" collection="idList" open="(" separator="," close=")">
+			#{code}
+		</foreach>
+	</select>
+
+	<select id="findById" resultType="com.jeesite.modules.device.entity.DeviceEntity">
+		select s.*
+		FROM device_info s
+		where s.device_id = #{id}
+	</select>
+</mapper>

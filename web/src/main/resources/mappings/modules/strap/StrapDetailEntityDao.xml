@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.strap.dao.StrapDetailEntityDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="StrapDetailEntity">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	<select id="findByScreenId" resultType="com.jeesite.modules.strap.entity.StrapDetailEntity">
+		select c.* from strap_detail c where c.screen_id = #{screenId} order by c.strap_position asc
+	</select>
+</mapper>

@@ -1,0 +1,128 @@
+<% layout('/layouts/default.html', {title: '屏幕管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('屏幕管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('screen:strapScreenEntity:edit')){ %>
+					<a href="${ctx}/screen/strapScreenEntity/form" class="btn btn-default btnTool" title="${text('新增屏幕')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${strapScreenEntity}" action="${ctx}/screen/strapScreenEntity/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('设备名')}：</label>
+					<div class="col-sm-8">
+						<#form:treeselect id="device" title="${text('设备选择')}"
+						path="deviceId" labelPath="deviceNameStr"
+						url="${ctx}/station/device/list"
+						class="required" allowClear="false" canSelectRoot="false" canSelectParent="false"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('屏类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="screenType" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="screenName" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('软压板类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="softType" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('软压板页码')}：</label>
+					<div class="control-inline">
+						<#form:input path="softPage" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('行数')}：</label>
+					<div class="control-inline">
+						<#form:input path="rowNum" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('列数')}：</label>
+					<div class="control-inline">
+						<#form:input path="colNum" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('压板个数')}：</label>
+					<div class="control-inline">
+						<#form:input path="strapNum" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注')}：</label>
+					<div class="control-inline">
+						<#form:input path="remark" class="form-control width-120"/>
+					</div>
+				</div>
+<!--				<div class="form-group">
+					<label class="control-label">${text('图片id')}：</label>
+					<div class="control-inline">
+						<#form:input path="attachmentId" class="form-control width-120"/>
+					</div>
+				</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm isQuick">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("设备名")}', name:'deviceNameStr', index:'a.device_id', width:150, align:"left"},
+		{header:'${text("屏类型")}', name:'screenType', index:'a.screen_type', width:80, align:"center", formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('screen_type')}, val, '', true);
+			}},
+		{header:'${text("名称")}', name:'screenName', index:'a.screen_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+				return '<a href="${ctx}/screen/strapScreenEntity/form?screenId='+row.screenId+'" class="btnList" data-title="${text("编辑屏幕")}">'+(val||row.id)+'</a>';
+			}},
+		{header:'${text("软压板类型")}', name:'softType', index:'a.soft_type', width:150, align:"center", formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('soft_type')}, val, '', true);
+			}},
+		{header:'${text("软压板页码")}', name:'softPage', index:'a.soft_page', width:150, align:"center"},
+		{header:'${text("行数")}', name:'rowNum', index:'a.row_num', width:150, align:"center"},
+		{header:'${text("列数")}', name:'colNum', index:'a.col_num', width:150, align:"center"},
+		{header:'${text("压板个数")}', name:'strapNum', index:'a.strap_num', width:150, align:"center"},
+		{header:'${text("备注")}', name:'remark', index:'a.remark', width:150, align:"center"},
+/*		{header:'${text("图片id")}', name:'attachmentId', index:'a.attachment_id', width:150, align:"center"},*/
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			//<% if(hasPermi('screen:strapScreenEntity:edit')){ %>
+				actions.push('<a href="${ctx}/screen/strapScreenEntity/form?screenId='+row.screenId+'" class="btnList" title="${text("编辑屏幕")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/screen/strapScreenEntity/delete?screenId='+row.screenId+'" class="btnList" title="${text("删除屏幕")}" data-confirm="${text("确认要删除该屏幕吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			//<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

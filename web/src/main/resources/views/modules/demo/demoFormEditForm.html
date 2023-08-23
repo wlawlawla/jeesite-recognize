@@ -426,8 +426,8 @@ $("#testDataChildDataGrid").dataGrid({
 			}, editable: true, edittype: "custom", editoptions: {
 				custom_element: function(val, editOptions) {
 					return js.template('treeselectTpl', {
-						id: 'area_'+editOptions.id, title: '区域选择', 
-						name: 'testAreaCode', value: val.split('|')[0], 
+						id: 'area_'+editOptions.id, title: '区域选择',
+						name: 'testAreaCode', value: val.split('|')[0],
 						labelName: 'testAreaName', labelValue: val.split('|')[1],
 						url: '${ctx}/sys/area/treeData', cssClass: ''
 					});

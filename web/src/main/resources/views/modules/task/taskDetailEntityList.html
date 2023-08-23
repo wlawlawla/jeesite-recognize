@@ -1,0 +1,99 @@
+<% layout('/layouts/default.html', {title: '任务管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('任务管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('task:taskDetailEntity:edit')){ %>
+					<a href="${ctx}/task/taskDetailEntity/form" class="btn btn-default btnTool" title="${text('新增任务')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${taskDetailEntity}" action="${ctx}/task/taskDetailEntity/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			<div class="form-group">
+				<label class="control-label">${text('站所')}：</label>
+				<div class="control-inline">
+					<#form:treeselect id="station" title="${text('站所选择')}"
+					path="stationId" labelPath="stationName"
+					url="${ctx}/station/list"
+					class="required" allowClear="false" canSelectRoot="true" canSelectParent="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('任务类型')}：</label>
+				<div class="control-inline width-90">
+					<#form:select path="taskType" dictType="task_type" boxWidth="500" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+				<div class="form-group">
+					<label class="control-label">${text('任务名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="taskName" maxlength="500" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('任务编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="taskNum" class="form-control"/>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="control-label">${text('巡检周期')}：</label>
+				<div class="control-inline width-90">
+					<#form:select path="taskCycle" dictType="task_cycle" blankOption="true" class="form-control"/>
+				</div>
+			</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm isQuick">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("任务id")}', name:'taskId', index:'a.task_id', width:220, align:"center"},
+		{header:'${text("站所")}', name:'stationName', index:'a.station_id', width:150, align:"center"},
+		{header:'${text("任务类型")}', name:'taskType', index:'a.task_type', width:120, align:"center", formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('task_type')}, val, '', true);
+			}},
+		{header:'${text("任务名称")}', name:'taskName', index:'a.task_name', width:150, align:"center"},
+		{header:'${text("任务编号")}', name:'taskNum', index:'a.task_num', width:200, align:"center"},
+		{header:'${text("任务创建者")}', name:'createUserName', index:'a.create_user', width:150, align:"center"},
+		{header:'${text("任务负责人")}', name:'directorNames', index:'a.director_name', width:150, align:"center"},
+		{header:'${text("巡检周期")}', name:'taskCycle', index:'a.task_cycle', width:100, align:"center", formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('task_cycle')}, val, '', true);
+			}},
+/*		{header:'${text("任务状态")}', name:'taskStatus', index:'a.task_status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('inspection_status')}, val, '${text("未知")}', true);
+		}},*/
+		{header:'${text("备注")}', name:'remark', index:'a.remark', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:80, formatter: function(val, obj, row, act){
+			var actions = [];
+			//<% if(hasPermi('task:taskDetailEntity:edit')){ %>
+				actions.push('<a href="${ctx}/task/taskDetailEntity/form?taskId='+row.taskId+'" class="btnList" title="${text("编辑任务")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/task/taskDetailEntity/delete?taskId='+row.taskId+'" class="btnList" title="${text("删除任务")}" data-confirm="${text("确认要删除该任务吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			//<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+
+	}
+});
+</script>

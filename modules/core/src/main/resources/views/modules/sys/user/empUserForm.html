@@ -21,16 +21,16 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('归属机构')}：<i class="fa icon-question hide"></i></label>
+								<span class="required ">*</span> ${text('所属部门')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:treeselect id="office" title="${text('机构选择')}"
+								<#form:treeselect id="office" title="${text('部门选择')}"
 									path="employee.office.officeCode" labelPath="employee.office.officeName" 
 									url="${ctx}/sys/office/treeData?ctrlPermi=${ctrlPermi}"
 									class="required" allowClear="false" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
+<!--					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('归属公司')}：<i class="fa icon-question hide"></i></label>
@@ -41,7 +41,7 @@
 									btnClass="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
 				<% } %>
 				<div class="row">
@@ -73,6 +73,17 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('员工姓名')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="employee.empName" maxlength="32" class="form-control "/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('电子邮箱')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<div class="input-group">
@@ -95,7 +106,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<!--<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -117,8 +128,8 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
+				</div>-->
+<!--				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -128,30 +139,10 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="form-unit">${text('详细信息')}</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('员工工号')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="employee.empNo" maxlength="32" class="form-control userName"
-									remote="${ctx}/sys/empUser/checkEmpNo?oldEmpNo=${empUser.employee.empNo}"
-									data-msg-remote="${text('员工工号已存在')}"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('员工姓名')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="employee.empName" maxlength="32" class="form-control "/>
-							</div>
-						</div>
-					</div>
-				</div>
+				</div>-->
+
+				<!--<div class="form-unit">${text('详细信息')}</div>
+
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
@@ -186,8 +177,8 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
+				</div>-->
+<!--				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="control-label col-sm-2" title="">
@@ -197,7 +188,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>-->
 				<% } %>
 				<% if(hasPermi('sys:empUser:authRole') && (op == 'add' || op == 'auth')) { %>
 				<div class="form-unit">${text('分配角色')}</div>
@@ -234,21 +225,21 @@ $("#empOfficeGrid").dataGrid({
 	data: ${toJson(empUser.employee.employeeOfficeList)},
 	datatype: "local", // 设置本地数据
 	columnModel: [
-		{header:'${text("附属机构")}', name:'officeName', sortable:false, width:100,
+		{header:'${text("所属部门")}', name:'officeName', sortable:false, width:100,
 			formatter: function(val, obj, row, act){
 				return js.val(row, 'officeCode')+'|'+js.val(row, 'officeName');
 			}, editable: true, edittype: "custom", editoptions: {
 				custom_element: function(val, editOptions) {
 					return js.template('treeselectTpl', {
-						id: 'office_'+editOptions.id, title: '机构选择', 
-						name: 'officeCode', value: val.split('|')[0], 
+						id: 'office_'+editOptions.id, title: '部门选择',
+						name: 'officeCode', value: val.split('|')[0],
 						labelName: 'officeName', labelValue: val.split('|')[1],
 						url: '${ctx}/sys/office/treeData', cssClass: 'required'
 					});
 				}
 			}
 		},
-		{header:'${text("附属岗位")}', name:'postCode', sortable:false, width:100, 
+		{header:'${text("附属岗位")}', name:'postCode', sortable:false, width:100,
 			editable:true, edittype:'select', editoptions:{'class':'form-control',
 				items: $.merge([{postName:'&nbsp;',postCode:''}], ${toJson(postList)}),
 				itemLabel: 'postName', itemValue: 'postCode', dataInit: function(element){
@@ -263,19 +254,19 @@ $("#empOfficeGrid").dataGrid({
 		}, editoptions: {defaultValue: 'new'}}
 	],
 	autoGridHeight: function(){return 'auto'}, // 设置自动高度
-	
+
 	// 编辑表格参数
 	editGrid: true,				// 是否是编辑表格
 	editGridInitRowNum: 0,		// 编辑表格的初始化新增行数
 	editGridAddRowBtn: $('#empOfficeGridAddRowBtn'),	// 子表增行按钮
 	editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
-	
+
 	// 编辑表格的提交数据参数
 	editGridInputFormListName: 'employee.employeeOfficeList', // 提交的数据列表名
 	editGridInputFormListAttrs: 'officeCode,officeName,postCode,postName,', // 提交数据列表的属性字段
-	
+
 	ajaxSuccess: function(){
-		
+
 	}
 });
 //<% if(hasPermi('sys:empUser:authRole') && (op == 'add' || op == 'auth')) { %>
